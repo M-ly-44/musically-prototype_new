@@ -36,25 +36,28 @@
 </head>
 <body>
   <div class="container">
-    <video id="Video" autoplay muted loop playsinline></video>
+    <video id="video" autoplay muted loop playsinline></video>
     <div class="caption" id="caption">Загрузка...</div>
   </div>
 
   <script>
     fetch('videos.json')
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) throw new Error('Не удалось загрузить videos.json');
+        return response.json();
+      })
       .then(videoFiles => {
         const randomIndex = Math.floor(Math.random() * videoFiles.length);
         const selectedFile = videoFiles[randomIndex];
 
-        const videoElement = document.getElementById('Video');
+        const videoElement = document.getElementById('video');
         videoElement.src = Video/${selectedFile};
 
         const caption = document.getElementById('caption');
         caption.textContent = Видео ${randomIndex + 1};
       })
       .catch(error => {
-        console.error('Ошибка загрузки списка видео:', error);
+        console.error('Ошибка:', error);
         document.getElementById('caption').textContent = 'Видео не найдено';
       });
   </script>
