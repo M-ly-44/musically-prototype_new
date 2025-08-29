@@ -41,22 +41,22 @@
   </div>
 
   <script>
-    const videoFiles = [
-      "video1.mp4",
-      "video2.mp4",
-      "video3.mp4",
-      "video4.mp4",
-      "video5.mp4"
-    ];
+    fetch('Video/videos.json')
+      .then(response => response.json())
+      .then(videoFiles => {
+        const randomIndex = Math.floor(Math.random() * videoFiles.length);
+        const selectedFile = videoFiles[randomIndex];
 
-    const randomIndex = Math.floor(Math.random() * videoFiles.length);
-    const selectedFile = videoFiles[randomIndex];
+        const videoElement = document.getElementById('video');
+        videoElement.src = Video/${selectedFile};
 
-    const videoElement = document.getElementById('video');
-    videoElement.src = Video/${selectedFile}; // ← учтено название папки с заглавной буквы
-
-    const caption = document.getElementById('caption');
-    caption.textContent = Видео ${randomIndex + 1};
+        const caption = document.getElementById('caption');
+        caption.textContent = Видео ${randomIndex + 1};
+      })
+      .catch(error => {
+        console.error('Ошибка загрузки списка видео:', error);
+        document.getElementById('caption').textContent = 'Видео не найдено';
+      });
   </script>
 </body>
 </html>
