@@ -13,6 +13,11 @@
       font-family: Arial, sans-serif;
       overflow: hidden;
     }
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
     video {
       width: 100%;
       height: 100%;
@@ -27,11 +32,6 @@
       text-shadow: 0 0 5px black;
       z-index: 10;
     }
-    .container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
   </style>
 </head>
 <body>
@@ -41,24 +41,20 @@
   </div>
 
   <script>
-    // Укажи общее количество видеофайлов, которые ты загрузил
-    const totalVideos = 10; // ← поменяй это число, если добавишь больше видео
+    const videoFiles = [
+      "video1.mp4",
+      "video2.mp4",
+      "video3.mp4",
+      "video4.mp4",
+      "video5.mp4"
+    ];
 
-    // Генерация имён файлов: video1.mp4, video2.mp4, ...
-    const videoFiles = [];
-    for (let i = 1; i <= totalVideos; i++) {
-      videoFiles.push(video${i}.mp4);
-    }
-
-    // Выбор случайного видео
     const randomIndex = Math.floor(Math.random() * videoFiles.length);
     const selectedFile = videoFiles[randomIndex];
 
-    // Установка видео
     const videoElement = document.getElementById('video');
     videoElement.src = videos/${selectedFile};
 
-    // Подпись
     const caption = document.getElementById('caption');
     caption.textContent = Видео ${randomIndex + 1};
   </script>
