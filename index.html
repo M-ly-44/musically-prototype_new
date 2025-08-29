@@ -36,7 +36,7 @@
 </head>
 <body>
   <div class="container">
-    <video id="video" autoplay muted loop playsinline></video>
+    <video id="Video" autoplay muted loop playsinline></video>
     <div class="caption" id="caption">Загрузка...</div>
   </div>
 
@@ -47,7 +47,7 @@
         const randomIndex = Math.floor(Math.random() * videoFiles.length);
         const selectedFile = videoFiles[randomIndex];
 
-        const videoElement = document.getElementById('video');
+        const videoElement = document.getElementById('Video');
         videoElement.src = Video/${selectedFile};
 
         const caption = document.getElementById('caption');
