@@ -41,6 +41,7 @@
   </div>
 
   <script>
+    // Список видеофайлов
     const videoFiles = [
       "video1.mp4",
       "video2.mp4",
@@ -49,12 +50,15 @@
       "video5.mp4"
     ];
 
+    // Выбор случайного видео
     const randomIndex = Math.floor(Math.random() * videoFiles.length);
     const selectedFile = videoFiles[randomIndex];
 
+    // Установка видео
     const videoElement = document.getElementById('video');
-    videoElement.src = videos/${selectedFile};
+    videoElement.src = Video/${selectedFile}; // ← учтено название папки с заглавной буквы
 
+    // Подпись
     const caption = document.getElementById('caption');
     caption.textContent = Видео ${randomIndex + 1};
   </script>
