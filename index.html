@@ -1,25 +1,51 @@
-<script>
-  fetch('videos.json')
-    .then(response => {
-      if (!response.ok) throw new Error('Не удалось загрузить videos.json');
-      return response.json();
-    })
-    .then(videoFiles => {
-      console.log('Список видео:', videoFiles); // ← лог для отладки
+async function enableSensors() {
+        // iOS требует явного разрешения через жест
+        try {
+          if (window.DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === 'function') {
+            const perm = await DeviceMotionEvent.requestPermission();
+            if (perm !== 'granted') throw new Error('Доступ к датчикам не разрешён');
+          }
+          if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
+            // Не критично, но запросим тоже
+            try { await DeviceOrientationEvent.requestPermission(); } catch (_) {}
+          }
+        } catch (err) {
+          msg.textContent = 'Нужно разрешить доступ к датчикам движения в браузере.';
+          console.warn(err);
+          // Всё равно попробуем повесить слушатели — вдруг устройство/браузер не требует разрешения
+        }
 
-      const randomIndex = Math.floor(Math.random() * videoFiles.length);
-      const selectedFile = videoFiles[randomIndex];
+        // Подписываемся на события
+        if ('DeviceMotionEvent' in window) {
+          window.addEventListener('devicemotion', onMotion, { passive: true });
+        }
+        if ('DeviceOrientationEvent' in window) {
+          window.addEventListener('deviceorientation', onOrientation, { passive: true });
+        }
 
-      console.log('Выбрано видео:', selectedFile); // ← лог для отладки
+        // Обновим UI
+        startBtn.classList.add('hidden');
+        msg.textContent = 'Крутите телефон — квадрат будет переключаться между синим и красным. Остановитесь — цвет перестанет меняться.';
+      }
 
-      const videoElement = document.getElementById('video');
-      videoElement.src = Video/${selectedFile};
+      startBtn.addEventListener('click', enableSensors, { passive: true });
 
-      const caption = document.getElementById('caption');
-      caption.textContent = Видео ${randomIndex + 1};
-    })
-    .catch(error => {
-      console.error('Ошибка:', error);
-      document.getElementById('caption').textContent = 'Видео не найдено';
-    });
-</script>
+      // Если разрешения не нужны (некоторые Android-браузеры) — сразу стартуем после первого жеста
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && !startBtn.classList.contains('hidden')) {
+          // ничего
+        }
+      });
+
+      // Дополнительно: если пользователь уже взаимодействовал (tap на странице, не по кнопке)
+      document.addEventListener('click', (e) => {
+        if (e.target === startBtn) return;
+        if (!startBtn.classList.contains('hidden')) {
+          // Попробуем автозапуск без запроса (на Android это обычно ок)
+          enableSensors();
+        }
+      }, { once: true, passive: true });
+    })();
+  </script>
+</body>
+</html>
